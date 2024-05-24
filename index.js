@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
+import dotenv from 'dotenv';
 
 import {
 	loginValidation,
@@ -11,10 +12,9 @@ import {
 import { checkAuth, handleValidationError } from './utils/index.js';
 import { UserController, PostController } from './controllers/index.js';
 
+dotenv.config();
 mongoose
-	.connect(
-		'mongodb+srv://yuriizatoka:919091Ua@cluster0.liip9qe.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0',
-	)
+	.connect(process.env.MONGODB_URI)
 	.then(() => console.log('DB is ok'))
 	.catch((e) => console.log('DB Error', e));
 
@@ -33,26 +33,6 @@ const upload = multer({ storage });
 
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
-
-// app.get('/', (req, res) => {
-// 	res.send('3434 Hello world!');
-// });
-
-// app.post('/auth/login', (req, res) => {
-// 	console.log(req.body);
-
-// 	const token = jwt.sign(
-// 		{
-// 			email: req.body.email,
-// 			fullName: 'Yurii Zatoka',
-// 		},
-// 		'123',
-// 	);
-// 	res.json({
-// 		success: true,
-// 		token,
-// 	});
-// });
 
 app.post('/auth/login', loginValidation, handleValidationError, UserController.login);
 app.post('/auth/register', registerValidation, handleValidationError, UserController.register);
