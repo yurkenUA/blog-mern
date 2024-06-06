@@ -16,5 +16,9 @@ export const postCreateValidation = [
 	body('title', 'Enter the title of the artcile').isLength({ min: 3 }).isString(),
 	body('text', 'Enter the main text of the artcile').isLength({ min: 10 }).isString(),
 	body('tags', "Wrong tag's format (indicate an array)").optional().isArray(),
-	body('imageUrl', "Bad image's URL").optional().isURL(),
+	body('imageUrl', "Bad image's URL").optional().isString(),
+];
+
+export const commentValidation = [
+	body('text', 'Enter the text of the comment').isLength({ min: 3 }).isString(),
 ];

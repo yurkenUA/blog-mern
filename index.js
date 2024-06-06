@@ -5,13 +5,14 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 import {
+	commentValidation,
 	loginValidation,
 	postCreateValidation,
 	registerValidation,
 } from './validations/validations.js';
 
 import { checkAuth, handleValidationError } from './utils/index.js';
-import { UserController, PostController } from './controllers/index.js';
+import { UserController, PostController, CommentController } from './controllers/index.js';
 
 dotenv.config();
 mongoose
@@ -47,11 +48,17 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 });
 
 app.get('/posts', PostController.getAll);
+app.get('/posts/sort', PostController.sort);
 app.get('/posts/tags', PostController.getLastTags);
+app.get('/posts/tags/:tag', PostController.filterByTag);
 app.post('/posts', checkAuth, postCreateValidation, handleValidationError, PostController.create);
 app.get('/posts/:id', PostController.getOne);
 app.delete('/posts/:id', checkAuth, PostController.remove);
 app.patch('/posts/:id', checkAuth, handleValidationError, PostController.update);
+
+app.get('/posts/:postId/comments', CommentController.getPostComments);
+app.get('/comments/latest', CommentController.getLatestComments);
+app.post('/posts/:postId/comments', checkAuth, commentValidation, CommentController.addComment);
 
 app.listen(4444, (err) => {
 	if (err) {
