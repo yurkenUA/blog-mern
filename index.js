@@ -60,7 +60,7 @@ app.get('/posts/:postId/comments', CommentController.getPostComments);
 app.get('/comments/latest', CommentController.getLatestComments);
 app.post('/posts/:postId/comments', checkAuth, commentValidation, CommentController.addComment);
 
-app.listen(4444, (err) => {
+app.listen(process.env.PORT || 4444, (err) => {
 	if (err) {
 		return console.log(err);
 	}
